@@ -8,7 +8,7 @@ from parser import Parser
 player = Player(rooms['outside'])
 parser = Parser(player)
 
-print("Welcome to Scranton!\n\n")
+print("\n\nWelcome to Scranton!")
 
 player.print_current_room()
 while True:

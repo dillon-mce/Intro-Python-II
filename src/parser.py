@@ -46,7 +46,7 @@ def quit_game(player):
 def print_commands(player):
     command_string = " | ".join('"{0}"'.format(w) for w in sorted(commands.keys()))
     paragraph = textwrap.fill(f'{command_string}')
-    print(f'\nThings you can type:\n{paragraph}\nThey may not all have an effect though...')
+    print(f'\nThings you can type:\n\n{paragraph}\n\nThey may not all have an effect though...')
     return True
 
 def take_item(player, item_name):
@@ -91,6 +91,7 @@ commands = {
 class Parser:
     def __init__(self, player):
         self.player = player
+        self.invalid_commands = 0
 
     def parse_command(self, command):
         split_commands = command.split(" ")
@@ -99,7 +100,7 @@ class Parser:
                 function = commands[command]
                 return function(self.player)
             else:
-                print("\nThat isn't a valid command, try again.")
+                self.invalid_command_response(command)
         else:
             verb = split_commands[0]
             if verb in commands:
@@ -107,6 +108,14 @@ class Parser:
                 for item_name in split_commands[1:]:
                     function(self.player, item_name)
             else:
-                print("\nThat isn't a valid command, try again.")
+                self.invalid_command_response(command)
         
         return True
+
+    def invalid_command_response(self, command):
+        if self.invalid_commands > 1:
+            print(f'\n"{command}" isn\'t a valid command, try again. Try typing "help" for more help.')
+            self.invalid_commands = 0
+        else:
+            print(f'\n"{command}" isn\'t a valid command, try again.')
+            self.invalid_commands += 1

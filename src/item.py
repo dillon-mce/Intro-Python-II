@@ -18,3 +18,7 @@ class Item:
 
     def on_drop(self):
         return
+
+class Food(Item):
+    def __init(self, name, description):
+        super().__init__(name, description)

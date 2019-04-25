@@ -1,6 +1,6 @@
 # Implement a class to hold room information. This should have name and
 # description attributes.
-from item import Item
+from item import *
 import textwrap
 
 class Room:
@@ -110,5 +110,5 @@ rooms['desk_clump_2'].add_addjacent_room(rooms['conference_room'], "west")
 rooms['desk_clump_2'].add_addjacent_room(rooms['kitchen'], "north")
 
 # Add items to rooms
-rooms['lobby'].add_items(Item("mug", """It is empty, but you can fill it up with some of that life-giving liquid."""), Item("apple", "Looks tasty."))
+rooms['lobby'].add_items(Item("mug", """It is empty, but you can fill it up with some of that life-giving liquid."""), Food("apple", "Looks tasty."))
 rooms['reception'].add_items(Item("candy", "Jelly beans today, lots of flavors to choose from."))
