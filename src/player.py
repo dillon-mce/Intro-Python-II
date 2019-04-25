@@ -4,16 +4,22 @@
 class Player:
     def __init__(self, current_room, inventory = []):
         self.current_room = current_room
+        self.previous_room = None
         self.inventory = inventory
         if len(self.inventory) > 0:
             self.inventory.sort()
 
     def move(self, direction):
         new_room = self.current_room.adjacent_room_for(direction)
+        self.previous_room = self.current_room
         self.current_room = new_room
+        if self.previous_room is not self.current_room:
+            self.print_current_room()
+
+    def print_current_room(self):
+        self.current_room.print_room()
 
     def look_around(self):
-        print(self.current_room.name)
         self.current_room.list_visible_items()
 
     def view_inventory(self):
