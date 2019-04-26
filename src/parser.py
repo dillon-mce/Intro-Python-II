@@ -1,6 +1,10 @@
 from player import Player
 import textwrap
 
+def move(player, item_name):
+    function = commands[item_name]
+    return function(player)
+
 def move_north(player):
     player.move("north")
     return True
@@ -15,6 +19,14 @@ def move_east(player):
 
 def move_west(player):
     player.move("west")
+    return True
+
+def move_first(player):
+    player.move("first")
+    return True
+
+def move_second(player):
+    player.move("second")
     return True
 
 def look(player, item_name = None):
@@ -33,8 +45,8 @@ def quit_game(player):
 
 def print_commands(player):
     command_string = " | ".join('"{0}"'.format(w) for w in sorted(commands.keys()))
-    paragraph = textwrap.fill(f'Things you can type:\n{command_string}')
-    print(f'\n{paragraph}')
+    paragraph = textwrap.fill(f'{command_string}')
+    print(f'\nThings you can type:\n\n{paragraph}\n\nThey may not all have an effect though...')
     return True
 
 def take_item(player, item_name):
@@ -54,6 +66,12 @@ commands = {
     'e': move_east,
     'west': move_west,
     'w': move_west,
+    'first': move_first,
+    '1': move_first,
+    'second': move_second,
+    '2': move_second,
+    'go': move,
+    'move': move,
     'look': look,
     'l': look,
     'view': look,
@@ -73,6 +91,7 @@ commands = {
 class Parser:
     def __init__(self, player):
         self.player = player
+        self.invalid_commands = 0
 
     def parse_command(self, command):
         split_commands = command.split(" ")
@@ -81,14 +100,22 @@ class Parser:
                 function = commands[command]
                 return function(self.player)
             else:
-                print("\nThat isn't a valid command, try again.")
+                self.invalid_command_response(command)
         else:
             verb = split_commands[0]
             if verb in commands:
-                item_name = split_commands[1]
                 function = commands[verb]
-                function(self.player, item_name)
+                for item_name in split_commands[1:]:
+                    function(self.player, item_name)
             else:
-                print("\nThat isn't a valid command, try again.")
+                self.invalid_command_response(command)
         
         return True
+
+    def invalid_command_response(self, command):
+        if self.invalid_commands > 1:
+            print(f'\n"{command}" isn\'t a valid command, try again. Try typing "help" for more help.')
+            self.invalid_commands = 0
+        else:
+            print(f'\n"{command}" isn\'t a valid command, try again.')
+            self.invalid_commands += 1
